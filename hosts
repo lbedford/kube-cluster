@@ -1,10 +1,10 @@
 [sata]
-atom ansible_host=192.168.2.66 ansible_user=root
-udoo ansible_host=192.168.2.72 ansible_user=root
+atom ansible_host=192.168.2.66 ansible_user=lbedford
+udoo ansible_host=192.168.2.72 ansible_user=lbedford
 
 [nvme]
-acer ansible_host=192.168.2.68 ansible_user=root
-nuc ansible_host=192.168.2.67 ansible_user=root
+acer ansible_host=192.168.2.68 ansible_user=lbedford
+nuc ansible_host=192.168.2.67 ansible_user=lbedford
 
 [master]
 master ansible_host=192.168.2.69 ansible_user=core
@@ -12,6 +12,7 @@ master ansible_host=192.168.2.69 ansible_user=core
 [workers]
 node-1 ansible_host=192.168.2.70 ansible_user=core
 node-2 ansible_host=192.168.2.71 ansible_user=core
+node-3 ansible_host=192.168.2.73 ansible_user=core
 
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3

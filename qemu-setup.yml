@@ -5,19 +5,13 @@
      shell: swupd bundle-add kvm-host storage-utils virt-manager >> swupd_kvm.txt
      args:
        chdir: $HOME
-       creates: swupd_kvm.txt
+       creates: /usr/bin/virt-install
 
    - name: Create lvm drive
-     shell: lvcreate -L 20G -n k8s --yes vms >> lv.txt
+     shell: lvcreate -L 20G -n k8s --yes vms
      args:
        chdir: $HOME
-       creates: lv.txt
-
-   - name: get fedora coreos image
-     shell: curl -O "https://builds.coreos.fedoraproject.org/prod/streams/testing/builds/30.20191014.0/x86_64/fedora-coreos-30.20191014.0-qemu.x86_64.qcow2.xz" && xz -d fedora-coreos-30.20191014.0-qemu.x86_64.qcow2.xz && qemu-img convert fedora-coreos-30.20191014.0-qemu.x86_64.qcow2 fedora-coreos-30.20191014.0-qemu.x86_64.img && rm fedora-coreos-30.20191014.0-qemu.x86_64.qcow2
-     args:
-       chdir: $HOME
-       creates: fedora-coreos-30.20191014.0-qemu.x86_64.img
+       creates: /dev/vms/k8s
 
    - name: get coreos image
      shell: curl https://stable.release.core-os.net/amd64-usr/current/coreos_production_qemu_image.img.bz2 | bunzip2 -d - > coreos_production_qemu_image.img.qcow2 && qemu-img convert coreos_production_qemu_image.img.qcow2 coreos_production_qemu_image.img && rm coreos_production_qemu_image.img.qcow2
@@ -52,7 +46,7 @@
        mode: '0644'
 
    - name: setup domain.xml
-     shell: virt-install --connect qemu:///system --import --name k8s --ram 7680 --network network=k8s,model=virtio --vcpus 8 --os-type=linux  --os-variant=virtio26 --disk path=/dev/vms/k8s,bus=virtio --vnc --noautoconsole --print-xml > /root/k8s.xml && sed -i 's|type="kvm"|type="kvm" xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0"|' /root/k8s.xml && sed -i "/<\/devices>/a <qemu:commandline>\n  <qemu:arg value='-fw_cfg'/>\n  <qemu:arg value='name=opt/com.coreos/config,file=/var/lib/libvirt/qemu/k8s-ssh.ign'/>\n</qemu:commandline>" /root/k8s.xml
+     shell: virt-install --connect qemu:///system --import --name k8s --ram 3840 --network network=k8s,model=virtio --vcpus 4 --os-type=linux  --os-variant=virtio26 --disk path=/dev/vms/k8s,bus=virtio --vnc --noautoconsole --print-xml > /root/k8s.xml && sed -i 's|type="kvm"|type="kvm" xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0"|' /root/k8s.xml && sed -i "/<\/devices>/a <qemu:commandline>\n  <qemu:arg value='-fw_cfg'/>\n  <qemu:arg value='name=opt/com.coreos/config,file=/var/lib/libvirt/qemu/k8s-ssh.ign'/>\n</qemu:commandline>" /root/k8s.xml
      args:
        creates: /root/k8s.xml
 
@@ -69,3 +63,8 @@
      args:
        chdir: $HOME
        creates: /etc/libvirt/qemu/networks/k8s.xml
+
+   - name: define and start domain
+     shell: virsh define /root/k8s.xml && virsh autostart k8s && virsh start k8s
+     args:
+       creates: /etc/libvirt/qemu/autostart/k8s.xml
