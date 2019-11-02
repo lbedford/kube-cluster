@@ -1,0 +1,17 @@
+- hosts: master,workers
+  become: yes
+  tasks:
+    - name: create cni dir
+      file:
+        path: /opt/cni/bin
+        state: directory
+
+    - name: download cni
+      get_url:
+        url: https://github.com/containernetworking/plugins/releases/download/v0.8.2/cni-plugins-linux-amd64-v0.8.2.tgz
+        dest: /tmp/cni-plugins.tgz
+
+    - name: untar cni
+      shell: tar -xzf /tmp/cni-plugins.tgz
+      args:
+        chdir: /opt/cni/bin

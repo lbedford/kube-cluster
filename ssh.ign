@@ -1,0 +1,19 @@
+{
+  "ignition": {
+    "config": {},
+    "timeouts": {},
+    "version": "2.1.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "name": "core",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCxM+I2TF9GV9sw+Y8ZxdwCKgNjyfTtqS3GRBhjD2EAMxiumOJbO9eUuuTpP6zsTnVxNALrd1EsGtJhHUI312ujVhbBI+IgifJ4ENELSR6w+4Tj3xcKxgzOoc192ZsuPloiqdxHi1pUNRddSnMG1MPD/eNXlONfoNoH8/W3QIyOmq5N6OuPIdpeefbR4xNblMkpao+3O5YZ+bDTNwFufVJDhkvjVStNDDwIogYGJSKeLcfbRWFH1Sn8NsAL1sOGd0IAa2tlcw5eNuWC6UJYKapJO7hBBP1D1IljHTka1QmbhqjD9/OaI6C6TBUEIvkNyp8njQK1PRaaPFkxCUR7t7Id lbedford@DESKTOP-1HP18K6.home.lbedford.org"
+        ]
+      }
+    ]
+  },
+  "storage": {},
+  "systemd": {}
+}

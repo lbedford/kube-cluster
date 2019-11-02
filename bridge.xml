@@ -1,0 +1,6 @@
+<network>
+  <name>k8s</name>
+  <forward mode='bridge'/>
+  <bridge name='k8sbr0'/>
+</network>
+
