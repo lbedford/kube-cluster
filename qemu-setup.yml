@@ -1,6 +1,22 @@
 - hosts: sata,nvme
   become: yes
   tasks:
+   - name: setup sftp dir
+     file:
+       path: '/etc/systemd/system/sshd@.service.d'
+       state: directory
+       mode: '0755'
+
+   - name: setup sftp config
+     copy:
+       src: sftp.conf
+       dest: '/etc/systemd/system/sshd@.service.d/sftp.confg'
+       owner: root
+       mode: '0644'
+
+   - name: reload systemd
+     shell: systemctl daemon-reload
+
    - name: Install kvm-host and lvm
      shell: swupd bundle-add kvm-host storage-utils virt-manager >> swupd_kvm.txt
      args:
@@ -39,7 +55,7 @@
 
    - name: copy ignition config
      copy:
-       src: /home/lbedford/kube-cluster/ssh.ign
+       src: ssh.ign
        dest: /var/lib/libvirt/qemu/k8s-ssh.ign
        owner: root
        group: root
@@ -52,7 +68,7 @@
 
    - name: copy bridge network
      copy:
-       src: /home/lbedford/kube-cluster/bridge.xml
+       src: bridge.xml
        dest: /root/bridge.xml
        owner: root
        group: root
@@ -67,4 +83,4 @@
    - name: define and start domain
      shell: virsh define /root/k8s.xml && virsh autostart k8s && virsh start k8s
      args:
-       creates: /etc/libvirt/qemu/autostart/k8s.xml
+       creates: /etc/libvirt/qemu/k8s.xml
